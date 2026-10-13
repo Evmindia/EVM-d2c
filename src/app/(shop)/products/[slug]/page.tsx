@@ -107,23 +107,23 @@ export default async function ProductDetailPage({ params }: { params: Promise<Pa
       />
 
       {/* Top Header Breadcrumb Bar */}
-      <section className="bg-neutral-950 text-white pt-6 pb-6">
-        <div className="mx-auto max-w-[1600px] px-6 sm:px-10">
+      <section className="bg-neutral-950 text-white pt-5 pb-5 sm:pt-6 sm:pb-6">
+        <div className="mx-auto max-w-[1600px] px-4 sm:px-6 lg:px-10">
           <Breadcrumbs variant="dark" items={breadcrumb} />
         </div>
       </section>
 
       {/* Main Content Area */}
-      <div className="mx-auto max-w-[1600px] px-6 sm:px-10 pt-8 space-y-12">
+      <div className="mx-auto max-w-[1600px] px-4 sm:px-6 lg:px-10 pt-6 sm:pt-8 space-y-10 sm:space-y-12 min-w-0">
         {/* Main Hero Card: Gallery + Buy Box */}
-        <div className="rounded-3xl bg-white p-6 sm:p-10 border border-neutral-200/80 shadow-sm grid gap-8 lg:grid-cols-2 lg:gap-12 items-start">
+        <div className="rounded-2xl sm:rounded-3xl bg-white p-4 sm:p-8 lg:p-10 border border-neutral-200/80 shadow-sm grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-start min-w-0">
           {/* Media Gallery */}
-          <div>
+          <div className="w-full max-w-full min-w-0">
             <ProductGallery images={product.images} title={product.title} />
           </div>
 
           {/* Buy Box */}
-          <div className="space-y-5 lg:sticky lg:top-24 self-start">
+          <div className="w-full max-w-full min-w-0 space-y-5 lg:sticky lg:top-24 self-start">
             <div>
               {product.brand && (
                 <span className={`text-xs font-semibold uppercase tracking-widest ${ACCENT}`}>

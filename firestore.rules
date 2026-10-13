@@ -1,0 +1,104 @@
+rules_version = '2';
+
+// =============================================================================
+// EVM D2C — Firestore Security Rules
+// PRINCIPLE: DEFAULT DENY. Nothing is readable/writable from the client unless
+// a rule below explicitly allows it. Sensitive collections (payments, refunds,
+// inventory, shipments, admin_users, audit_logs, coupons-writes,
+// analytics_events, notifications) are SERVER-ONLY: they are written exclusively
+// via the Firebase Admin SDK, which bypasses these rules, so we deny all client
+// access to them here.
+//
+// Phase 1 ships the default-deny baseline. Ownership rules for customer-owned
+// collections are scaffolded (commented) and enabled in later phases with tests.
+// =============================================================================
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // ---- Helpers (used by later-phase rules) --------------------------------
+    function isSignedIn() {
+      return request.auth != null;
+    }
+    function isOwner(ownerUid) {
+      return isSignedIn() && request.auth.uid == ownerUid;
+    }
+    function hasRole(role) {
+      return isSignedIn() && request.auth.token.role == role;
+    }
+    function isAdmin() {
+      return hasRole('admin') || hasRole('superadmin');
+    }
+
+    // ---- SERVER-ONLY collections: deny ALL client access --------------------
+    // (payments, refunds, inventory, shipments, admin_users, audit_logs,
+    //  analytics_events, notifications, coupons, processed_webhooks)
+    // Reached only via Admin SDK. Rules intentionally deny everything.
+    match /payments/{doc}         { allow read, write: if false; }
+    match /refunds/{doc}          { allow read, write: if false; }
+    match /inventory/{doc}        { allow read, write: if false; }
+    match /shipments/{doc}        { allow read, write: if false; }
+    match /admin_users/{doc}      { allow read, write: if false; }
+    match /audit_logs/{doc}       { allow read, write: if false; }
+    match /analytics_events/{doc} { allow read, write: if false; }
+    match /notifications/{doc}    { allow read, write: if false; }
+    match /coupons/{doc}          { allow read, write: if false; }
+    match /processed_webhooks/{doc} { allow read, write: if false; }
+    // Carts (Phase 3): server-only. All cart reads/writes go through the Admin
+    // SDK via the cart service; clients use the /api/cart endpoints. Ownership
+    // is enforced server-side (verified uid / secure guest cookie). Denying all
+    // direct client access here removes any possibility of cart IDOR at the DB.
+    match /carts/{doc}            { allow read, write: if false; }
+    match /rate_limits/{doc}      { allow read, write: if false; }
+    // Orders (Phase 4): server-only. Orders are created and read exclusively via
+    // the Admin SDK through /api/orders with access control (verified owner or
+    // secure capability token). Denying all direct client access removes any
+    // possibility of order IDOR at the DB layer.
+    match /orders/{doc}           { allow read, write: if false; }
+    match /idempotency_keys/{doc} { allow read, write: if false; }
+    // Saved addresses (Phase 5): server-only. PII; accessed via /api/account/*
+    // with ownership enforced by verified uid. No direct client access.
+    match /user_addresses/{doc}   { allow read, write: if false; }
+
+    // ---- Catalog (Phase 2): PUBLIC READ of ACTIVE items; writes server-only --
+    // Public clients may read only active products/categories. All writes go
+    // through the Admin SDK (admin APIs), so client writes are denied. Note:
+    // internal fields (hsn, gstRate, cost, supplier, internalNotes) live on the
+    // document but are never returned by the public API (mapper allow-list); if
+    // stricter field-level hiding is required at the rules layer later, split
+    // internal fields into a server-only subcollection.
+    match /products/{productId} {
+      allow get, list: if resource.data.isActive == true;
+      allow create, update, delete: if false; // server/admin only (Admin SDK)
+    }
+
+    match /categories/{categoryId} {
+      allow get, list: if resource.data.isActive == true;
+      allow create, update, delete: if false; // server/admin only (Admin SDK)
+    }
+
+    // ---- Users (Phase 5): read OWN profile; ALL writes server-only ----------
+    // A customer may read their own profile document. Writes are performed
+    // exclusively by trusted server code (Admin SDK) via /api/account/profile,
+    // so server-controlled fields (uid, email, emailVerified, isActive,
+    // createdAt, lastLoginAt) and authorization (Firebase custom claims) can
+    // never be modified by a customer. Denying client writes entirely is the
+    // simplest guarantee against self-promotion to admin.
+    match /users/{uid} {
+      allow get: if isOwner(uid);
+      allow list, create, update, delete: if false;
+    }
+
+    // ---- Customer-owned collections (ENABLED IN LATER PHASES, with tests) ---
+    // match /orders handled as server-only above (accessed via /api/orders).
+    // match /product_reviews/{reviewId} {
+    //   allow read: if resource.data.status == 'approved';
+    //   allow create, update, delete: if false; // server-side after purchase check
+    // }
+
+    // ---- Global default deny (catch-all) ------------------------------------
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}

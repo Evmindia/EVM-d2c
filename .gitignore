@@ -1,0 +1,48 @@
+# dependencies
+/node_modules
+/.pnp
+.pnp.js
+
+# next
+/.next/
+/out/
+next-env.d.ts
+
+# typescript build info
+*.tsbuildinfo
+
+# production build
+/build
+
+# testing
+/coverage
+
+# env — NEVER commit real secrets
+.env
+.env.local
+.env.development.local
+.env.staging.local
+.env.production.local
+.env*.local
+# Firebase Admin service-account keys must NEVER be committed.
+# The downloaded file is typically named like
+# "<project>-firebase-adminsdk-<hash>.json" (e.g. evm-d2c-dev-firebase-adminsdk-*.json),
+# so match "firebase-adminsdk" / "adminsdk" / "serviceAccount" ANYWHERE in the name.
+*serviceAccount*.json
+*service-account*.json
+*serviceAccountKey*.json
+*firebase-adminsdk*.json
+*-adminsdk-*.json
+firebase-adminsdk*.json
+
+# misc
+.DS_Store
+*.pem
+*.log
+npm-debug.log*
+.vscode/*
+!.vscode/extensions.json
+.idea
+
+# vitest
+/.vitest

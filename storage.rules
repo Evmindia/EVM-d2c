@@ -1,0 +1,45 @@
+rules_version = '2';
+
+// =============================================================================
+// EVM D2C — Firebase Storage Security Rules
+// PRINCIPLE: DEFAULT DENY. Product images are written SERVER-SIDE only (Admin
+// SDK bypasses these rules). Customer uploads (later phases) are scoped to the
+// user's own path with size + content-type constraints. Phase 1 = default deny.
+// =============================================================================
+
+service firebase.storage {
+  match /b/{bucket}/o {
+
+    function isSignedIn() {
+      return request.auth != null;
+    }
+    function isImage() {
+      return request.resource.contentType.matches('image/(png|jpeg|jpg|webp)');
+    }
+    function withinSize(maxBytes) {
+      return request.resource.size < maxBytes;
+    }
+
+    // ---- Customer uploads (ENABLED IN LATER PHASES, with tests) -------------
+    // match /users/{uid}/uploads/{fileId} {
+    //   allow read: if isSignedIn() && request.auth.uid == uid;
+    //   allow write: if isSignedIn() && request.auth.uid == uid
+    //                 && isImage() && withinSize(5 * 1024 * 1024);
+    // }
+
+    // ---- Product images (Phase 2): public read; writes SERVER-SIDE only -----
+    // Product images are public (catalog is public). Uploads are performed by
+    // the admin API via the Admin SDK (which bypasses these rules), so ALL
+    // client writes are denied. Upload validation (MIME + magic-byte + size +
+    // generated filename) is enforced server-side in image.service.ts.
+    match /products/{allPaths=**} {
+      allow read: if true;
+      allow write: if false;
+    }
+
+    // ---- Global default deny -------------------------------------------------
+    match /{allPaths=**} {
+      allow read, write: if false;
+    }
+  }
+}

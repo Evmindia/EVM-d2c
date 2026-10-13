@@ -1,0 +1,18 @@
+# Gitleaks configuration for secret scanning in CI.
+# Uses the default ruleset plus explicit allowlisting of template/example files.
+title = "EVM D2C gitleaks config"
+
+[extend]
+useDefault = true
+
+[allowlist]
+description = "Allow env templates and lockfiles which contain no real secrets."
+paths = [
+  '''\.env\.example$''',
+  '''package-lock\.json$''',
+]
+# Placeholder tokens used across docs/templates.
+regexes = [
+  '''PENDING''',
+  '''<FINAL_D2C_SUBDOMAIN>''',
+]

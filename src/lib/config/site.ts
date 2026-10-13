@@ -11,10 +11,12 @@ import { publicEnv } from './env';
  */
 
 const FALLBACK_DEV_URL = 'http://localhost:3000';
+const FALLBACK_HOSTED_URL = 'https://evm-storefront--evm-d2c-dev.asia-southeast1.hosted.app';
 
-/** Absolute base URL, no trailing slash. Falls back to localhost in dev. */
+/** Absolute base URL, no trailing slash. Falls back to localhost in dev or hosted URL in prod. */
 export function siteUrl(): string {
-  const raw = publicEnv.NEXT_PUBLIC_SITE_URL || FALLBACK_DEV_URL;
+  const fallback = process.env.NODE_ENV === 'production' || process.env.K_SERVICE ? FALLBACK_HOSTED_URL : FALLBACK_DEV_URL;
+  const raw = publicEnv.NEXT_PUBLIC_SITE_URL || fallback;
   return raw.replace(/\/+$/, '');
 }
 

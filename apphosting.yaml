@@ -1,0 +1,102 @@
+# apphosting.yaml
+# Firebase App Hosting configuration for EVM Storefront
+
+runConfig:
+  cpu: 1
+  memoryMiB: 1024
+  minInstances: 0
+  maxInstances: 10
+  concurrency: 80
+
+env:
+  - variable: NEXT_PUBLIC_SITE_URL
+    value: https://evm-storefront--evm-d2c-dev.asia-southeast1.hosted.app
+    availability:
+      - BUILD
+      - RUNTIME
+  - variable: NEXT_PUBLIC_FIREBASE_API_KEY
+    value: AIzaSyCmjqab5SUVxq7vu9_xJmaY-6XB-EWrtaA
+    availability:
+      - BUILD
+      - RUNTIME
+  - variable: NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN
+    value: evm-d2c-dev.firebaseapp.com
+    availability:
+      - BUILD
+      - RUNTIME
+  - variable: NEXT_PUBLIC_FIREBASE_PROJECT_ID
+    value: evm-d2c-dev
+    availability:
+      - BUILD
+      - RUNTIME
+  - variable: NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET
+    value: evm-d2c-dev.firebasestorage.app
+    availability:
+      - BUILD
+      - RUNTIME
+  - variable: NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID
+    value: "652116955490"
+    availability:
+      - BUILD
+      - RUNTIME
+  - variable: NEXT_PUBLIC_FIREBASE_APP_ID
+    value: "1:652116955490:web:291487742931b639951c3b"
+    availability:
+      - BUILD
+      - RUNTIME
+  - variable: PAYMENT_PROVIDER
+    value: smartgateway
+    availability:
+      - RUNTIME
+  - variable: HDFC_SMARTGATEWAY_API_KEY
+    value: DB9C624D3674B99A378D585030A6E5
+    availability:
+      - RUNTIME
+  - variable: HDFC_SMARTGATEWAY_MERCHANT_ID
+    value: SG6357
+    availability:
+      - RUNTIME
+  - variable: HDFC_SMARTGATEWAY_RESPONSE_KEY
+    value: AAB936313F54EADABAB8221418D367
+    availability:
+      - RUNTIME
+  - variable: HDFC_SMARTGATEWAY_PAYMENT_PAGE_CLIENT_ID
+    value: hdfcmaster
+    availability:
+      - RUNTIME
+  - variable: HDFC_SMARTGATEWAY_BASE_URL
+    value: https://smartgateway.hdfcuat.bank.in
+    availability:
+      - RUNTIME
+  - variable: KAPSYSTEM_BASE_URL
+    value: https://api.kapsystem.com/sms/1/text/query
+    availability:
+      - RUNTIME
+  - variable: KAPSYSTEM_USERNAME
+    value: hundia
+    availability:
+      - RUNTIME
+  - variable: KAPSYSTEM_PASSWORD
+    value: Hundia@2026
+    availability:
+      - RUNTIME
+  - variable: KAPSYSTEM_FROM
+    value: EVMIND
+    availability:
+      - RUNTIME
+  - variable: KAPSYSTEM_DLT_CONTENT_TEMPLATE_ID
+    value: "1777178782065000408"
+    availability:
+      - RUNTIME
+  - variable: KAPSYSTEM_DLT_PRINCIPAL_ENTITY_ID
+    value: "1701171222680155296"
+    availability:
+      - RUNTIME
+  - variable: KAPSYSTEM_DLT_TELEMARKETER_ID
+    value: "1602100000000004471"
+    availability:
+      - RUNTIME
+  - variable: KAPSYSTEM_OTP_TEMPLATE
+    value: "Your OTP is {#var#} for login. - Hundia Infosolutions (EVM)"
+    availability:
+      - RUNTIME

@@ -23,7 +23,6 @@ import {
   organizationJsonLd,
   faqJsonLd,
 } from '@/lib/seo/structured-data';
-import type { ProductSort } from '@/types/catalog';
 
 // ISR — PDP is the priority landing page for Instagram/Meta ads.
 export const revalidate = 300;

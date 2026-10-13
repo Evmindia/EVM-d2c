@@ -30,6 +30,13 @@ const config = [
         'error',
         { argsIgnorePattern: '^_', varsIgnorePattern: '^_', ignoreRestSiblings: true },
       ],
+      'react-hooks/set-state-in-effect': 'off',
+    },
+  },
+  {
+    files: ['**/*.test.ts', '**/*.test.tsx', '**/__tests__/**'],
+    rules: {
+      '@typescript-eslint/no-explicit-any': 'off',
     },
   },
 ];

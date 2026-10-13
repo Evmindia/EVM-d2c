@@ -78,7 +78,6 @@ export function PaymentPanel({ orderReference }: { orderReference: string }) {
   }, [orderReference]);
 
   useEffect(() => {
-    // eslint-disable-next-line react-hooks/set-state-in-effect
     refresh();
   }, [refresh]);
 

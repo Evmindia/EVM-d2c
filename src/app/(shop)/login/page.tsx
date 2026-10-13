@@ -2,7 +2,6 @@
 
 import { Suspense } from 'react';
 import Link from 'next/link';
-import { Container } from '@/components/ui/Container';
 import { PhoneOtpLogin } from '@/components/auth/PhoneOtpLogin';
 import { Logo } from '@/components/ui/Logo';
 

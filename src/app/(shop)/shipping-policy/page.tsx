@@ -4,7 +4,6 @@ import { Container } from '@/components/ui/Container';
 import { Breadcrumbs } from '@/components/shop/Breadcrumbs';
 import { breadcrumbJsonLd } from '@/lib/seo/structured-data';
 import { absoluteUrl, siteMeta } from '@/lib/config/site';
-import { SELLER } from '@/services/tax/gst.config';
 
 export const metadata: Metadata = {
   title: 'Shipping & Delivery Policy — EVM India',

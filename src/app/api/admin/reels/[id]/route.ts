@@ -47,7 +47,7 @@ export const PATCH = route(
     if (!updated) throw new AppError('not_found', { internal: 'Reel not found' });
 
     await recordAudit({
-      action: 'content.reel.update' as any,
+      action: 'content.reel.update',
       actorUid: principal.uid,
       actorRole: principal.role,
       resourceType: 'reel',
@@ -71,7 +71,7 @@ export const DELETE = route(
     await deleteReel(id);
 
     await recordAudit({
-      action: 'content.reel.delete' as any,
+      action: 'content.reel.delete',
       actorUid: principal.uid,
       actorRole: principal.role,
       resourceType: 'reel',

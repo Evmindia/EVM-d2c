@@ -153,8 +153,8 @@ export function assertPasswordPolicy(password: string): void {
 async function safeAuthUpdate(uid: string, props: { password?: string; displayName?: string; disabled?: boolean }): Promise<void> {
   try {
     await adminAuth().updateUser(uid, props);
-  } catch (err: any) {
-    const msg = String(err?.message || err);
+  } catch (err: unknown) {
+    const msg = err instanceof Error ? err.message : String(err);
     if (msg.includes('Missing password requirements') || msg.includes('PASSWORD_DOES_NOT_MEET_REQUIREMENTS')) {
       throw new AppError('validation_error', {
         internal: 'Password must be at least 10 characters and contain an uppercase letter, a lowercase letter, a number, and a special character.',
@@ -167,8 +167,8 @@ async function safeAuthUpdate(uid: string, props: { password?: string; displayNa
 async function safeAuthCreate(props: { email: string; password: string; displayName?: string; emailVerified?: boolean }) {
   try {
     return await adminAuth().createUser(props);
-  } catch (err: any) {
-    const msg = String(err?.message || err);
+  } catch (err: unknown) {
+    const msg = err instanceof Error ? err.message : String(err);
     if (msg.includes('Missing password requirements') || msg.includes('PASSWORD_DOES_NOT_MEET_REQUIREMENTS')) {
       throw new AppError('validation_error', {
         internal: 'Password must be at least 10 characters and contain an uppercase letter, a lowercase letter, a number, and a special character.',

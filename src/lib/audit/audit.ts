@@ -32,6 +32,9 @@ export type AuditAction =
   | 'staff.create'
   | 'staff.update'
   | 'staff.delete'
+  | 'content.reel.create'
+  | 'content.reel.update'
+  | 'content.reel.delete'
   | 'admin.login'
   | 'admin.denied';
 

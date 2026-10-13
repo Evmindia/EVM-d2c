@@ -22,7 +22,6 @@ export function useAdminData<T>(url: string | null): {
     if (!url) return;
     let active = true;
     // Reset loading on url change; real state is set after the async fetch.
-    // eslint-disable-next-line react-hooks/set-state-in-effect
     setLoading(true);
     fetch(url, { headers: { accept: 'application/json' } })
       .then(async (r) => {

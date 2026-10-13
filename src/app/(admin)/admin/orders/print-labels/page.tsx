@@ -94,7 +94,7 @@ export default function PrintLabelsPage({
 
         <div className="flex items-center gap-2">
           <span className="text-xs text-gray-400 hidden sm:inline">
-            Printer Format: <strong>4" × 6" (100mm × 150mm)</strong>
+            Printer Format: <strong>4&quot; × 6&quot; (100mm × 150mm)</strong>
           </span>
           <button
             onClick={() => window.print()}

@@ -369,7 +369,7 @@ export default function AdminOrderDetailPage({ params }: { params: Promise<{ ref
             rel="noopener noreferrer"
             className="rounded-md bg-gray-900 px-3 py-1.5 text-xs font-bold text-white hover:bg-gray-800 shadow-sm"
           >
-            🏷️ Print Thermal Sticker (4"×6")
+            🏷️ Print Thermal Sticker (4&quot;×6&quot;)
           </a>
           <a
             href={`/admin/orders/print-invoices?refs=${encodeURIComponent(order.orderNumber)}`}

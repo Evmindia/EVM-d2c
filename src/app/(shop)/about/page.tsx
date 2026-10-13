@@ -1,6 +1,5 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
-import { Container } from '@/components/ui/Container';
 import { Breadcrumbs } from '@/components/shop/Breadcrumbs';
 import { organizationJsonLd, breadcrumbJsonLd } from '@/lib/seo/structured-data';
 import { absoluteUrl } from '@/lib/config/site';

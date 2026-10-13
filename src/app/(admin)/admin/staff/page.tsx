@@ -136,8 +136,9 @@ export default function AdminStaffPage() {
         pass: password,
       });
       reload();
-    } catch (err: any) {
-      setFormError(err.message || 'An error occurred while creating staff member.');
+    } catch (err: unknown) {
+      const msg = err instanceof Error ? err.message : 'An error occurred while creating staff member.';
+      setFormError(msg);
     } finally {
       setFormBusy(false);
     }
@@ -159,7 +160,7 @@ export default function AdminStaffPage() {
     setFormError(null);
 
     try {
-      const payload: Record<string, any> = {
+      const payload: Record<string, unknown> = {
         role: editRole,
         isActive: editIsActive,
         displayName: editDisplayName.trim(),
@@ -181,8 +182,9 @@ export default function AdminStaffPage() {
 
       setEditModalUser(null);
       reload();
-    } catch (err: any) {
-      setFormError(err.message || 'An error occurred while updating staff member.');
+    } catch (err: unknown) {
+      const msg = err instanceof Error ? err.message : 'An error occurred while updating staff member.';
+      setFormError(msg);
     } finally {
       setFormBusy(false);
     }
@@ -207,8 +209,9 @@ export default function AdminStaffPage() {
         throw new Error(json.error?.message || json.message || 'Failed to delete staff member');
       }
       reload();
-    } catch (err: any) {
-      alert(err.message || 'Could not delete staff member.');
+    } catch (err: unknown) {
+      const msg = err instanceof Error ? err.message : 'Could not delete staff member.';
+      alert(msg);
     }
   }
 
@@ -677,7 +680,7 @@ Assigned Role: ${newCredentials.role === 'warehouse' ? 'Dispatch / Warehouse Tea
                 <select
                   value={editRole}
                   disabled={editModalUser.uid === me?.uid}
-                  onChange={(e) => setEditRole(e.target.value as any)}
+                  onChange={(e) => setEditRole(e.target.value as 'superadmin' | 'admin' | 'warehouse')}
                   className="w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-xs text-gray-900 outline-none focus:border-gray-900"
                 >
                   <option value="warehouse">📦 Dispatch / Warehouse Team (Orders &amp; Shipping Only)</option>

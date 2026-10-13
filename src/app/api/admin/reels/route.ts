@@ -47,7 +47,7 @@ export const POST = route(
     const reel = await createReel(input);
 
     await recordAudit({
-      action: 'content.reel.create' as any,
+      action: 'content.reel.create',
       actorUid: principal.uid,
       actorRole: principal.role,
       resourceType: 'reel',

@@ -1,5 +1,4 @@
 import type { Metadata } from 'next';
-import Link from 'next/link';
 import { Container } from '@/components/ui/Container';
 import { Breadcrumbs } from '@/components/shop/Breadcrumbs';
 import { breadcrumbJsonLd } from '@/lib/seo/structured-data';

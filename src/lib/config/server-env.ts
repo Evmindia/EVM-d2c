@@ -48,7 +48,11 @@ export function serverEnv(): ServerEnv {
     APP_ENV: process.env.APP_ENV,
     FIREBASE_ADMIN_PROJECT_ID: process.env.FIREBASE_ADMIN_PROJECT_ID,
     FIREBASE_ADMIN_CLIENT_EMAIL: process.env.FIREBASE_ADMIN_CLIENT_EMAIL,
-    FIREBASE_ADMIN_PRIVATE_KEY: process.env.FIREBASE_ADMIN_PRIVATE_KEY,
+    FIREBASE_ADMIN_PRIVATE_KEY:
+      process.env.FIREBASE_ADMIN_PRIVATE_KEY ||
+      (process.env.FIREBASE_ADMIN_PRIVATE_KEY_BASE64
+        ? Buffer.from(process.env.FIREBASE_ADMIN_PRIVATE_KEY_BASE64, 'base64').toString('utf8')
+        : undefined),
     PAYMENT_PROVIDER: process.env.PAYMENT_PROVIDER,
     PAYMENT_KEY_ID: process.env.PAYMENT_KEY_ID,
     PAYMENT_KEY_SECRET: process.env.PAYMENT_KEY_SECRET,

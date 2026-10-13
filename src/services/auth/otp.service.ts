@@ -76,7 +76,7 @@ export async function requestOtp(phoneE164: string): Promise<void> {
   await sendOtpSms(phoneE164, code); // throws on failure (code never logged)
 }
 
-/** Verify an OTP. Returns true on success (one-time use); false otherwise. */
+/** Verify an OTP. Returns true on match; increments attempts on mismatch. */
 export async function verifyOtp(phoneE164: string, code: string): Promise<boolean> {
   const ref = adminDb().collection(COLLECTION).doc(docId(phoneE164));
   const snap = await ref.get();
@@ -91,6 +91,11 @@ export async function verifyOtp(phoneE164: string, code: string): Promise<boolea
     await ref.update({ attempts: d.attempts + 1 });
     return false;
   }
-  await ref.delete(); // consume on success
   return true;
+}
+
+/** Consumes the OTP after the custom token and session have been successfully created. */
+export async function consumeOtp(phoneE164: string): Promise<void> {
+  const ref = adminDb().collection(COLLECTION).doc(docId(phoneE164));
+  await ref.delete().catch(() => {});
 }

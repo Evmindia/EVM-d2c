@@ -78,8 +78,9 @@ export function PhoneOtpLogin({ onDone }: { onDone?: () => void } = {}) {
       await confirmPhoneOtp(phone, otp);
       if (onDone) onDone();
       else router.push(safeNext(params.get('next')));
-    } catch {
-      setError('Invalid or expired OTP code. Please try again.');
+    } catch (err: unknown) {
+      const msg = err instanceof Error ? err.message : 'Invalid or expired OTP code. Please try again.';
+      setError(msg);
     } finally {
       setBusy(false);
     }

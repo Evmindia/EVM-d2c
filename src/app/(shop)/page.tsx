@@ -75,34 +75,46 @@ export default async function HomePage() {
 
       {/* ============ HERO ============ */}
       <section className="relative min-h-[100svh] w-full overflow-hidden bg-neutral-950 text-white">
+        {/* Mobile Background */}
+        <Image
+          src="/hero-mobile-v2.webp"
+          alt="EVM Wireless Audio and Fast Charging Essentials"
+          fill
+          priority
+          sizes="100vw"
+          className="object-cover object-[center_15%] sm:hidden"
+        />
+        {/* Desktop Background */}
         <Image
           src="/hero-headphones.webp"
           alt="EVM Wireless Over-Ear Active Noise Cancelling Headphones and Audio Accessories"
           fill
           priority
           sizes="100vw"
-          className="object-cover object-[75%_center]"
+          className="hidden object-cover object-[75%_center] sm:block"
         />
-        <div className="absolute inset-0 bg-gradient-to-r from-black/85 via-black/50 to-black/10" />
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_72%_35%,rgba(255,255,255,0.08),transparent_58%)]" />
 
-        <div className="relative mx-auto flex min-h-[100svh] max-w-[1600px] flex-col justify-center px-6 pt-24 pb-16 sm:px-10">
+        {/* Gradients */}
+        <div className="absolute inset-0 bg-gradient-to-t from-black/95 via-black/50 to-black/20 sm:bg-gradient-to-r sm:from-black/85 sm:via-black/50 sm:to-black/10" />
+        <div className="absolute inset-0 hidden sm:block sm:bg-[radial-gradient(ellipse_at_72%_35%,rgba(255,255,255,0.08),transparent_58%)]" />
+
+        <div className="relative mx-auto flex min-h-[100svh] max-w-[1600px] flex-col justify-end pb-14 px-6 pt-24 sm:justify-center sm:pb-16 sm:px-10">
           <div className="max-w-2xl">
-            <h1 className="text-5xl font-light leading-[1.02] tracking-tight sm:text-7xl">
+            <h1 className="text-4xl font-light leading-[1.05] tracking-tight sm:text-7xl">
               Tech.
               <br />
               Simplified.
               <br />
               <span className={ACCENT}>Essentials.</span>
             </h1>
-            <p className="mt-7 text-sm leading-relaxed text-white/70 sm:text-base">
+            <p className="mt-5 text-sm leading-relaxed text-white/80 sm:mt-7 sm:text-base">
               Power. Sound. Freedom.
               <br />
               Three essentials for your everyday.
             </p>
             <Link
               href="/products"
-              className="mt-9 inline-flex items-center gap-2 rounded-full bg-white px-7 py-3.5 text-[11px] font-semibold uppercase tracking-widest text-neutral-900 transition hover:bg-white/90"
+              className="mt-7 inline-flex items-center gap-2 rounded-full bg-white px-7 py-3.5 text-[11px] font-semibold uppercase tracking-widest text-neutral-900 transition hover:bg-white/90 sm:mt-9"
             >
               Explore Collection <IconArrow className="h-4 w-4" />
             </Link>

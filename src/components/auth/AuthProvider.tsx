@@ -109,10 +109,13 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       headers: { 'content-type': 'application/json' },
       body: JSON.stringify({ phone, code }),
     });
-    if (!res.ok) throw new Error('otp/invalid');
+    if (!res.ok) {
+      const errJson = (await res.json().catch(() => ({}))) as { error?: { message?: string } };
+      throw new Error(errJson.error?.message || 'Invalid or expired OTP code. Please try again.');
+    }
     const json = (await res.json()) as { data?: { customToken?: string } };
     const token = json.data?.customToken;
-    if (!token) throw new Error('otp/invalid');
+    if (!token) throw new Error('Failed to retrieve authentication token.');
     const cred = await signInWithCustomToken(clientAuth(), token);
     await postSession(await cred.user.getIdToken(), 'login');
     await mergeGuestCart();

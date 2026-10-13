@@ -2,7 +2,7 @@ import { z } from 'zod';
 import { route, ok } from '@/app/api/_lib/handler';
 import { AppError } from '@/lib/security/errors';
 import { parseJsonBody } from '@/lib/security/validate';
-import { verifyOtp } from '@/services/auth/otp.service';
+import { verifyOtp, consumeOtp } from '@/services/auth/otp.service';
 import { adminAuth } from '@/lib/firebase/admin';
 import { logger } from '@/lib/logger';
 
@@ -42,7 +42,18 @@ export const POST = route(
     } catch {
       uid = (await auth.createUser({ phoneNumber: phone })).uid;
     }
-    const customToken = await auth.createCustomToken(uid);
+
+    let customToken: string;
+    try {
+      customToken = await auth.createCustomToken(uid);
+    } catch (err) {
+      logger.error('otp_custom_token_failed', { err: String(err) });
+      throw new AppError('internal_error', { internal: 'Failed to mint session token for phone user.' });
+    }
+
+    // Consume the OTP only after successful token creation
+    await consumeOtp(phone);
+
     logger.info('otp_verified', { uid });
     return ok({ customToken });
   },

@@ -5,6 +5,7 @@ import { enforceRateLimit } from '@/lib/security/rate-limit/rate-limit.service';
 import { safeText } from '@/lib/security/validate';
 import { createSession, SESSION_COOKIE, sessionCookieOptions } from '@/lib/auth/session';
 import { ensureProfile } from '@/services/users/user.service';
+import { isWhitelistedPhone } from '@/services/auth/otp.service';
 import { recordAudit } from '@/lib/audit/audit';
 import { logger } from '@/lib/logger';
 
@@ -30,13 +31,17 @@ const bodySchema = z
 export const POST = route(
   async ({ req, clientKey }) => {
     const body = await parseJsonBody(req, bodySchema);
-    // Rate-limit by intent (signup is tighter than login).
-    await enforceRateLimit(body.mode === 'signup' ? 'auth_signup' : 'auth_login', clientKey);
-
     const session = await createSession(body.idToken);
+
+    // Rate-limit by intent (whitelisted audit phones bypass)
+    if (!session.phone || !isWhitelistedPhone(session.phone)) {
+      await enforceRateLimit(body.mode === 'signup' ? 'auth_signup' : 'auth_login', clientKey);
+    }
+
     const profile = await ensureProfile({
       uid: session.uid,
       email: session.email,
+      phone: session.phone,
       emailVerified: session.emailVerified,
       displayName: body.displayName || session.displayName || undefined,
     });

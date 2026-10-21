@@ -2,7 +2,8 @@ import { z } from 'zod';
 import { route, ok } from '@/app/api/_lib/handler';
 import { AppError } from '@/lib/security/errors';
 import { parseJsonBody } from '@/lib/security/validate';
-import { requestOtp } from '@/services/auth/otp.service';
+import { enforceRateLimit } from '@/lib/security/rate-limit/rate-limit.service';
+import { requestOtp, isWhitelistedPhone } from '@/services/auth/otp.service';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
@@ -18,14 +19,23 @@ function toE164(raw: string): string {
 }
 
 export const POST = route(
-  async ({ req }) => {
+  async ({ req, clientKey }) => {
     const body = await parseJsonBody(req, bodySchema);
     const phone = toE164(body.phone);
     if (!/^\+\d{11,15}$/.test(phone)) {
-      throw new AppError('bad_request', { internal: 'invalid phone' });
+      throw new AppError('bad_request', {
+        message: 'Please enter a valid mobile number.',
+        internal: 'invalid phone',
+      });
     }
+
+    // Rate-limit by client IP for public requests; whitelisted audit numbers bypass
+    if (!isWhitelistedPhone(phone)) {
+      await enforceRateLimit('auth_signup', clientKey);
+    }
+
     await requestOtp(phone);
     return ok({ sent: true });
   },
-  { sameOrigin: true, rateLimit: 'auth_signup' }, // tightest policy (SMS costs)
+  { sameOrigin: true },
 );

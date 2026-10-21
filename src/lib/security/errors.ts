@@ -64,8 +64,8 @@ export class AppError extends Error {
   /** Internal-only context for logs; never serialized to the client. */
   readonly internal?: unknown;
 
-  constructor(code: ErrorCode, opts?: { fields?: Record<string, string>; internal?: unknown }) {
-    super(SAFE_MESSAGE[code]);
+  constructor(code: ErrorCode, opts?: { fields?: Record<string, string>; internal?: unknown; message?: string }) {
+    super(opts?.message ?? SAFE_MESSAGE[code]);
     this.name = 'AppError';
     this.code = code;
     this.fields = opts?.fields;

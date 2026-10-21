@@ -49,6 +49,7 @@ export async function ensureProfile(identity: {
   email: string;
   emailVerified: boolean;
   displayName?: string;
+  phone?: string;
 }): Promise<UserProfile> {
   const now = new Date().toISOString();
   const docRef = ref(identity.uid);
@@ -58,7 +59,7 @@ export async function ensureProfile(identity: {
     const profile = {
       email: identity.email,
       displayName: identity.displayName ?? '',
-      phone: '',
+      phone: identity.phone ?? '',
       emailVerified: identity.emailVerified,
       isActive: true,
       createdAt: now,
@@ -70,11 +71,16 @@ export async function ensureProfile(identity: {
   }
 
   // Refresh server-controlled auth-derived fields on login.
-  await docRef.set(
-    { emailVerified: identity.emailVerified, lastLoginAt: now, updatedAt: now, email: identity.email },
-    { merge: true },
-  );
-  return docToProfile(identity.uid, { ...snap.data(), emailVerified: identity.emailVerified, lastLoginAt: now });
+  const patch: Record<string, unknown> = {
+    emailVerified: identity.emailVerified,
+    lastLoginAt: now,
+    updatedAt: now,
+  };
+  if (identity.email) patch.email = identity.email;
+  if (identity.phone && !snap.data()?.phone) patch.phone = identity.phone;
+
+  await docRef.set(patch, { merge: true });
+  return docToProfile(identity.uid, { ...snap.data(), ...patch });
 }
 
 export async function getProfile(uid: string): Promise<UserProfile | null> {

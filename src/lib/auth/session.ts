@@ -47,6 +47,7 @@ export async function createSession(idToken: string): Promise<{
   cookie: string;
   uid: string;
   email: string;
+  phone: string;
   emailVerified: boolean;
   displayName: string;
 }> {
@@ -59,6 +60,7 @@ export async function createSession(idToken: string): Promise<{
     cookie,
     uid: decoded.uid,
     email: typeof decoded.email === 'string' ? decoded.email : '',
+    phone: typeof decoded.phone_number === 'string' ? decoded.phone_number : '',
     emailVerified: Boolean(decoded.email_verified),
     displayName: typeof decoded.name === 'string' ? decoded.name : '',
   };
